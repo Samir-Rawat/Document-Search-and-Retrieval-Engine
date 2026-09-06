@@ -4,7 +4,6 @@
 #include <string>
 #include <filesystem>
 
-
 namespace fs = std::filesystem;
 
 class Document {
@@ -22,7 +21,5 @@ class Document {
         std::string getContent() const;
         const fs::path& getPath() const;
 };
-
-
 
 #endif

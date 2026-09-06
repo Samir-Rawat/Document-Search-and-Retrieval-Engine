@@ -23,6 +23,7 @@ class InvertedIndex {
     
         void insert(const Document& doc);
         ConstIterator find(const std::string& word) const;
+        ConstIterator end() const;
 };
 
 #endif

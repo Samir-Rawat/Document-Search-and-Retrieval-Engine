@@ -2,12 +2,15 @@
 #include <fstream>
 
 Document::Document(int id, const fs::path& path):
-    m_id{id}, m_path{path}
+    m_id{id}, m_path{path}, m_title{path.filename().string()}
 {
 }
 
 int Document::getID() const {
     return m_id;
+}
+const std::string& Document::getTitle() const {
+    return m_title;
 }
 std::string Document::getContent() const {
     return m_content;

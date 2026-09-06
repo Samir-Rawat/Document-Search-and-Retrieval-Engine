@@ -7,7 +7,9 @@ void InvertedIndex::insert(const Document& doc){
         index[token][doc.getID()]++;
     }
 }
-
+InvertedIndex::ConstIterator InvertedIndex::end() const {
+    return index.end();
+}
 InvertedIndex::ConstIterator InvertedIndex::find(const std::string& word) const{
     return index.find(word);
 }

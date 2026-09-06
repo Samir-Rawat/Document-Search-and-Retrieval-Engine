@@ -1,0 +1,23 @@
+# Build
+build/
+bin/
+out/
+CMakeLists.txt
+
+# Compiled files
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+
+# IDE
+.vscode/
+.idea/
+
+# Generated/runtime data
+data/*
+!data/.gitkeep
+
+# Testing/Experimenting
+testing/

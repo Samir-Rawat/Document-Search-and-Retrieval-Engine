@@ -4,18 +4,15 @@
 std::vector<std::string> Tokenizer::tokenize(const std::string& text) {
     std::vector<std::string> list;
     std::string current;
-    for(auto i{text.begin()}; i != text.end(); i++) {
-
-        if(isspace(*i) || *i == '.' || *i == '!' || *i == '?' || *i == ';') {
+    for(const auto& c : text) {
+        if(isspace(c) || c == '.' || c == '!' || c == '?' || c == ';') {
             if(!current.empty()) {
                 list.push_back(current);
                 current.clear();
             }
-            else
-                continue;
         }
         else
-            current.push_back(std::tolower(*i));
+            current.push_back(static_cast<char>(std::tolower(c)));
     }    
     if (!current.empty())
         list.push_back(current);

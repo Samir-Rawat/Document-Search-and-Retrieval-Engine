@@ -3,8 +3,6 @@
 
 #include "Document.hpp"
 #include "Tokenizer.hpp"
-#include <optional>
-#include <vector>
 #include <unordered_map>
 #include <string>
 

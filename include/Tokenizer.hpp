@@ -6,7 +6,7 @@
     
 class Tokenizer {
     public:
-        std::vector<std::string> tokenize(const std::string& text);
+    static std::vector<std::string> tokenize(const std::string& text);
 };
 
 #endif

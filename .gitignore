@@ -3,7 +3,6 @@ build/
 bin/
 out/
 cmake-build-debug/
-CMakeLists.txt
 
 # Compiled files
 *.exe

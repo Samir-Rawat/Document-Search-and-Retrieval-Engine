@@ -1,0 +1,8 @@
+//
+// Created by Des on 15/10/2026.
+//
+
+#ifndef SEARCHENGINE_HASHMAP_HPP
+#define SEARCHENGINE_HASHMAP_HPP
+
+#endif //SEARCHENGINE_HASHMAP_HPP

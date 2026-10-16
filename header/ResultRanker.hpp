@@ -1,11 +1,12 @@
 #ifndef RESULT_RANKER_HPP
 #define RESULT_RANKER_HPP
 
+#include "Document.hpp"
 #include <vector>
-#include <unordered_map>
+#include "HashMap.hpp"
 
 class ResultRanker {
 public:
-    std::vector<std::pair<int, int>> rank(const std::unordered_map<int, int>& result) const;
+    std::vector<std::pair<int, int>> rank(const PostingNode* result) const;
 };
 #endif

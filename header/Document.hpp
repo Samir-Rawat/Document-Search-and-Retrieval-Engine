@@ -7,19 +7,17 @@
 namespace fs = std::filesystem;
 
 class Document {
-    private:
-        int m_id;
-        fs::path m_path;
-        std::string m_title;
-        std::string m_content;
-    public:
-        Document(int id, const fs::path& path);
+private:
+    int m_id;
+    fs::path m_path;
+    std::string m_title;
+public:
+    Document(int id, const fs::path& path);
+    int getID() const;
+    const fs::path& getPath() const;
+    const std::string& getTitle() const;
+    std::string getContent() const;
 
-        bool load();
-        int getID() const;
-        const std::string& getTitle() const;
-        std::string getContent() const;
-        const fs::path& getPath() const;
 };
 
 #endif

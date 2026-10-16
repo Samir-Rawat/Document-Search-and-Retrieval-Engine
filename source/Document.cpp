@@ -6,24 +6,29 @@ Document::Document(int id, const fs::path& path):
 {
 }
 
-int Document::getID() const { return m_id; }
+int Document::getID() const {
+    return m_id;
+}
 
-const std::string& Document::getTitle() const { return m_title; }
+const fs::path& Document::getPath() const {
+    return m_path;
+}
 
-std::string Document::getContent() const { return m_content; }
+const std::string& Document::getTitle() const {
+    return m_title;
+}
 
-const fs::path& Document::getPath() const { return m_path; }
-
-bool Document::load() {
+std::string Document::getContent() const {
     std::ifstream file(m_path);
 
     if(!file.is_open())
-        return false;
-    
+        return "";
+
+    std::string content;
     std::string line;
     while (std::getline(file, line)){
-        m_content += line;
-        m_content += '\n';
+        content += line;
+        content += '\n';
     }
-    return true;
+    return content;
 }

@@ -8,7 +8,7 @@
 class SearchEngine {
 public:
     SearchEngine(const InvertedIndex& index);
-    std::unordered_map<int, int> search(const std::string& searchString) const;
+    const PostingNode* search(const std::string& searchString) const;
 
 private:
     const InvertedIndex& m_index;

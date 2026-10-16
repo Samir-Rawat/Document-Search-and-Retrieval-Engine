@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(SearchEngine
+        source/main.cpp
+
         source/Document.cpp
         header/Document.hpp
 
@@ -20,6 +22,9 @@ add_executable(SearchEngine
 
         source/ResultRanker.cpp
         header/ResultRanker.hpp
+
+        source/HashMap.cpp
+        header/HashMap.hpp
 )
 
 target_include_directories(SearchEngine PRIVATE header)

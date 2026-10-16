@@ -17,5 +17,5 @@ std::vector<std::string> Tokenizer::tokenize(const std::string& text) {
     if (!current.empty())
         list.push_back(current);
     
-    return list;
+    return std::move(list);
 }

@@ -5,7 +5,7 @@
 #include <string>
     
 class Tokenizer {
-    public:
+public:
     static std::vector<std::string> tokenize(const std::string& text);
 };
 

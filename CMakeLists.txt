@@ -5,6 +5,10 @@ project(SearchEngine)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
 add_executable(SearchEngine
         source/main.cpp
 
@@ -25,6 +29,18 @@ add_executable(SearchEngine
 
         source/HashMap.cpp
         header/HashMap.hpp
+
+        header/SearchWindow.hpp
+        source/SearchWindow.cpp
+
+        header/QueryProcessor.hpp
+        source/QueryProcessor.cpp
+)
+
+set_target_properties(SearchEngine PROPERTIES
+        WIN32_EXECUTABLE TRUE
 )
 
 target_include_directories(SearchEngine PRIVATE header)
+
+target_link_libraries(SearchEngine PRIVATE Qt6::Widgets)

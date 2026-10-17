@@ -8,7 +8,7 @@
 class SearchEngine {
 public:
     SearchEngine(const InvertedIndex& index);
-    const PostingNode* search(const std::string& searchString) const;
+    const PostingNode* search(const std::string& query) const;
 
 private:
     const InvertedIndex& m_index;

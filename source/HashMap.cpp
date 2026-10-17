@@ -1,4 +1,3 @@
-
 #include "HashMap.hpp"
 
 #include <functional>

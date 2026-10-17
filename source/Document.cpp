@@ -32,3 +32,17 @@ std::string Document::getContent() const {
     }
     return content;
 }
+
+std::vector<std::unique_ptr<Document>> Document::loadDirectory(const fs::path& directory) {
+    std::vector<std::unique_ptr<Document>> documents;
+
+    int i = 0;
+
+    for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+        documents.push_back(
+            std::make_unique<Document>(++i, entry.path())
+        );
+    }
+
+    return documents;
+}

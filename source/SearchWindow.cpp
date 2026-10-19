@@ -1,5 +1,4 @@
 #include "SearchWindow.hpp"
-#include "SearchWindow.hpp"
 #include "ResultRanker.hpp"
 
 #include <QLineEdit>

@@ -107,7 +107,7 @@ void SearchWindow::loadDocuments()
         documents = Document::loadDirectory(directoryInput->text().trimmed().toStdString());
 
         for (const auto& document : documents) {
-            m_index.insert(*document);
+            m_index.insert(document);
         }
 
         if (documents.empty()) {
@@ -168,7 +168,7 @@ void SearchWindow::performSearch()
 
         const QString itemText =
             QString("%1  |  Frequency: %2")
-                .arg(QString::fromStdString(document->getTitle()))
+                .arg(QString::fromStdString(document.getTitle()))
                 .arg(frequency);
 
         resultsList->addItem(itemText);

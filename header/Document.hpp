@@ -20,7 +20,7 @@ public:
     const std::string& getTitle() const;
     std::string getContent() const;
 
-    static std::vector<std::unique_ptr<Document>> loadDirectory(const fs::path& directory);
+    static std::vector<Document> loadDirectory(const fs::path& directory);
 };
 
 #endif

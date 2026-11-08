@@ -35,7 +35,7 @@ private:
 
     InvertedIndex m_index;
     SearchEngine searchEngine;
-    std::vector<std::unique_ptr<Document>> documents;
+    std::vector<Document> documents;
 
     bool documentsLoaded = false;
 };

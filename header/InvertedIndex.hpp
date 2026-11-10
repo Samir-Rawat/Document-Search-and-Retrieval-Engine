@@ -12,6 +12,7 @@ public:
 
     void insert(const Document& doc);
     const PostingNode* find(const std::string& word) const;
+    void clear();
 };
 
 #endif

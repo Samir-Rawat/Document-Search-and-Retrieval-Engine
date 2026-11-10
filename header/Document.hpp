@@ -19,8 +19,9 @@ public:
     const fs::path& getPath() const;
     const std::string& getTitle() const;
     std::string getContent() const;
-
-    static std::vector<Document> loadDirectory(const fs::path& directory);
 };
+
+
+std::vector<Document> loadDirectory(const fs::path& directory);
 
 #endif

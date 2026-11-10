@@ -12,6 +12,7 @@
 
 #include <filesystem>
 #include <string>
+#include <stdexcept>
 
 SearchWindow::SearchWindow(QWidget *parent)
     : QMainWindow(parent), searchEngine(m_index)
@@ -70,73 +71,65 @@ SearchWindow::SearchWindow(QWidget *parent)
     setCentralWidget(centralWidget);
 
     // Load documents
-    connect(loadButton, &QPushButton::clicked,
-            this, &SearchWindow::loadDocuments);
+    connect(loadButton, &QPushButton::clicked, this, &SearchWindow::loadDocuments);
 
     // Search button and Enter key
     connect(searchButton, &QPushButton::clicked, this,&SearchWindow::performSearch);
-
-    connect(searchInput, &QLineEdit::returnPressed,
-            searchButton, &QPushButton::click);
+    connect(searchInput, &QLineEdit::returnPressed, searchButton, &QPushButton::click);
 }
 
-void SearchWindow::loadDocuments()
-{
-    if (documentsLoaded) {
-        QMessageBox::information(
-            this, "Already Loaded",
-            "Documents have already been loaded. "
-            "Restart the application to load another directory."
-            );
-        return;
-    }
-
-    const std::string directory =
-        directoryInput->text().trimmed().toStdString();
-
-    if (directory.empty() || !fs::is_directory(directory)) {
-        QMessageBox::warning(
-            this, "Invalid Directory",
-            "Please enter a valid directory path."
-            );
-        return;
-    }
+void SearchWindow::loadDocuments() {
+    const std::string directory = directoryInput->text().trimmed().toStdString();
 
     try {
-        documents = Document::loadDirectory(directoryInput->text().trimmed().toStdString());
+        //load the documents
+        m_index.clear();
+        documentsLoaded = false;
+        documents = loadDirectory(directory);
 
+        QString errors;
+
+        //build the inverted index of documents
         for (const auto& document : documents) {
-            m_index.insert(document);
+            try {
+                m_index.insert(document);
+            }
+            catch (const std::exception& e) {
+                errors += QString::fromStdString(document.getTitle() + ": " + e.what()) + '\n';
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            QMessageBox::warning(
+                this,"Indexing Warnings",
+                "Some documents could not be indexed:\n\n" + errors
+            );
         }
 
         if (documents.empty()) {
             QMessageBox::information(
                 this, "No Documents",
                 "No files were found in this directory."
-                );
+            );
             return;
         }
 
         documentsLoaded = true;
-        directoryInput->setEnabled(false);
-        loadButton->setEnabled(false);
-
     }
-    catch (const fs::filesystem_error& e) {
+    catch (const std::exception& e) {
         QMessageBox::critical(
             this, "Directory Error",
             QString::fromStdString(e.what())
-            );
+        );
     }
 }
 
-void SearchWindow::performSearch()
-{
+void SearchWindow::performSearch() {
     if (!documentsLoaded) {
         QMessageBox::warning(
             this, "Documents Not Loaded",
             "Load a directory before searching."
-            );
+        );
         return;
     }
 

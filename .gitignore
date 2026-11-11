@@ -26,6 +26,3 @@ cmake-build-debug/
 # Generated/runtime data
 data/*
 !data/.gitkeep
-
-# Testing/Experimenting
-tests/

@@ -1,5 +1,5 @@
 /*
-g++ -std=c++17 -Iheader test/QueryParserTest.cpp source/QueryParser.cpp source/Tokenizer.cpp -o QueryParserTest.exe
+g++ -std=c++17 -Iheader tests/QueryParserTest.cpp source/QueryParser.cpp source/Tokenizer.cpp -o QueryParserTest.exe
 */
 #include "QueryParser.hpp"
 #include <iostream>

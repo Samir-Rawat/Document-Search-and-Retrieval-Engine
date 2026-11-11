@@ -33,8 +33,8 @@ add_executable(SearchEngine
         header/SearchWindow.hpp
         source/SearchWindow.cpp
 
-        header/QueryProcessor.hpp
-        source/QueryProcessor.cpp
+        header/QueryParser.hpp
+        source/QueryParser.cpp
 )
 
 set_target_properties(SearchEngine PROPERTIES

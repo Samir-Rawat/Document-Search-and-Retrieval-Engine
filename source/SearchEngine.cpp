@@ -1,5 +1,5 @@
 #include "SearchEngine.hpp"
-#include "QueryProcessor.hpp"
+#include "QueryParser.hpp"
 SearchEngine::SearchEngine(const InvertedIndex &index) : m_index(index) {
 }
 

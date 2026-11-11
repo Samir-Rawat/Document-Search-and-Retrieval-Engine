@@ -15,7 +15,7 @@
 #include <stdexcept>
 
 SearchWindow::SearchWindow(QWidget *parent)
-    : QMainWindow(parent), searchEngine(m_index)
+    : QMainWindow(parent), searchEngine(m_documents, m_index)
 {
     setWindowTitle("Document Search Engine");
     resize(800, 550);
@@ -85,12 +85,12 @@ void SearchWindow::loadDocuments() {
         //load the documents
         m_index.clear();
         documentsLoaded = false;
-        documents = loadDirectory(directory);
+        m_documents = loadDirectory(directory);
 
         QString errors;
 
         //build the inverted index of documents
-        for (const auto& document : documents) {
+        for (const auto& document : m_documents) {
             try {
                 m_index.insert(document);
             }
@@ -106,7 +106,7 @@ void SearchWindow::loadDocuments() {
             );
         }
 
-        if (documents.empty()) {
+        if (m_documents.empty()) {
             QMessageBox::information(
                 this, "No Documents",
                 "No files were found in this directory."
@@ -152,11 +152,11 @@ void SearchWindow::performSearch() {
     const auto& rankedResults = resultRanker.rank(result);
 
     for (const auto& [docID, frequency] : rankedResults) {
-        if (docID < 1 || static_cast<std::size_t>(docID) > documents.size()) {
+        if (docID < 1 || static_cast<std::size_t>(docID) > m_documents.size()) {
             continue;
         }
 
-        const auto& document = documents[docID - 1];
+        const auto& document = m_documents[docID - 1];
 
         const QString itemText =
             QString("%1  |  Frequency: %2")

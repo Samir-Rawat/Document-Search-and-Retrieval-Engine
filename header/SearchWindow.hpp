@@ -34,10 +34,10 @@ private:
     QListWidget *resultsList;
 
     InvertedIndex m_index;
+    std::vector<Document> m_documents;
     SearchEngine searchEngine;
-    std::vector<Document> documents;
 
     bool documentsLoaded = false;
 };
 
-#endif // SEARCHWINDOW_HPP
+#endif

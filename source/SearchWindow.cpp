@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QListWidget>
+#include <QFileDialog>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -32,9 +33,11 @@ SearchWindow::SearchWindow(QWidget *parent)
         "padding: 10px;"
     );
 
+    // Direcroty Input
     directoryInput = new QLineEdit(centralWidget);
     directoryInput->setPlaceholderText("Enter document directory path...");
 
+    browseButton = new QPushButton("Browse", centralWidget);
     loadButton = new QPushButton("Load Documents", centralWidget);
 
     // Search bar and button
@@ -43,8 +46,21 @@ SearchWindow::SearchWindow(QWidget *parent)
 
     searchButton = new QPushButton("Search", centralWidget);
 
+    // Rank Strategy Selector
+    rankingSelector = new QComboBox(this);
+
+    rankingSelector->addItem("Frequency");
+    rankingSelector->addItem("TF-IDF");
+
+    rankingStrategy = new FrequencyRanker();
+
+    auto *directoryLayout = new QHBoxLayout();
+    directoryLayout->addWidget(directoryInput);
+    directoryLayout->addWidget(browseButton);
+
     auto *searchLayout = new QHBoxLayout();
     searchLayout->addWidget(searchInput);
+    searchLayout->addWidget(rankingSelector);
     searchLayout->addWidget(searchButton);
 
     // Results area
@@ -61,7 +77,7 @@ SearchWindow::SearchWindow(QWidget *parent)
     // Layout
     mainLayout->addWidget(title);
     mainLayout->addWidget(new QLabel("Document Directory:", centralWidget));
-    mainLayout->addWidget(directoryInput);
+    mainLayout->addLayout(directoryLayout);
     mainLayout->addWidget(loadButton);
 
     mainLayout->addLayout(searchLayout);
@@ -76,15 +92,32 @@ SearchWindow::SearchWindow(QWidget *parent)
     // Search button and Enter key
     connect(searchButton, &QPushButton::clicked, this,&SearchWindow::performSearch);
     connect(searchInput, &QLineEdit::returnPressed, searchButton, &QPushButton::click);
+
+    //Ranking strategy
+    connect(rankingSelector, &QComboBox::currentIndexChanged, this,
+    [this](int index) {
+            delete rankingStrategy;
+
+            if (index == 0)
+                rankingStrategy = new FrequencyRanker();
+            else
+                rankingStrategy = new TFIDFRanker();
+        }
+    );
+}
+
+SearchWindow::~SearchWindow() {
+    delete rankingStrategy;
 }
 
 void SearchWindow::loadDocuments() {
     const std::string directory = directoryInput->text().trimmed().toStdString();
+    resultsList->clear();
+    m_documentsLoaded = false;
 
     try {
         //load the documents
         m_index.clear();
-        documentsLoaded = false;
         m_documents = loadDirectory(directory);
 
         QString errors;
@@ -114,7 +147,7 @@ void SearchWindow::loadDocuments() {
             return;
         }
 
-        documentsLoaded = true;
+        m_documentsLoaded = true;
     }
     catch (const std::exception& e) {
         QMessageBox::critical(
@@ -125,7 +158,7 @@ void SearchWindow::loadDocuments() {
 }
 
 void SearchWindow::performSearch() {
-    if (!documentsLoaded) {
+    if (!m_documentsLoaded) {
         QMessageBox::warning(
             this, "Documents Not Loaded",
             "Load a directory before searching."
@@ -133,39 +166,47 @@ void SearchWindow::performSearch() {
         return;
     }
 
-    const std::string query =
-        searchInput->text().trimmed().toStdString();
+    const std::string query = searchInput->text().trimmed().toStdString();
 
     if (query.empty())
         return;
 
     resultsList->clear();
 
-    auto result = searchEngine.search(query);
+    try {
+        SearchResults results = searchEngine.search(query);
+        results = rankingStrategy->rank(results);
 
-    if (result == nullptr) {
-        resultsList->addItem("No results found.");
-        return;
-    }
+        for (const auto& result : results) {
+            if (result.documentID < 1 || result.documentID > m_documents.size()) {
+                continue;
+            }
 
-    ResultRanker resultRanker;
-    const auto& rankedResults = resultRanker.rank(result);
+            const auto& document = m_documents[result.documentID - 1];
 
-    for (const auto& [docID, frequency] : rankedResults) {
-        if (docID < 1 || static_cast<std::size_t>(docID) > m_documents.size()) {
-            continue;
+            QString itemText;
+
+            if (rankingSelector->currentIndex() == 0) {
+                itemText = QString("%1  |  Frequency: %2")
+                    .arg(QString::fromStdString(document.getTitle()))
+                    .arg(result.frequency);
+            }
+            else {
+                itemText = QString("%1  |  TF-IDF: %2")
+                    .arg(QString::fromStdString(document.getTitle()))
+                    .arg(result.score, 0, 'f', 4);
+            }
+
+            resultsList->addItem(itemText);
         }
 
-        const auto& document = m_documents[docID - 1];
-
-        const QString itemText =
-            QString("%1  |  Frequency: %2")
-                .arg(QString::fromStdString(document.getTitle()))
-                .arg(frequency);
-
-        resultsList->addItem(itemText);
+        if (resultsList->count() == 0)
+            resultsList->addItem("No results found.");
     }
-
-    if (resultsList->count() == 0)
-        resultsList->addItem("No results found.");
+    catch (const std::exception& e) {
+        QMessageBox::warning(
+            this, "Search Error",
+            QString::fromStdString(e.what())
+        );
+    }
 }

@@ -2,7 +2,7 @@
 #define SEARCHWINDOW_HPP
 
 #include <QMainWindow>
-#include <QStringList>
+#include <QComboBox>
 
 #include "Document.hpp"
 #include "InvertedIndex.hpp"
@@ -19,9 +19,11 @@ class SearchWindow : public QMainWindow
 
 public:
     explicit SearchWindow(QWidget *parent = nullptr);
+    ~SearchWindow();
 
     signals:
         void searchRequested(const QString& query);
+
 
 private:
     void loadDocuments();
@@ -31,13 +33,17 @@ private:
     QLineEdit *searchInput;
     QPushButton *searchButton;
     QPushButton *loadButton;
+    QPushButton* browseButton;
     QListWidget *resultsList;
+    QComboBox* rankingSelector;
 
     InvertedIndex m_index;
     std::vector<Document> m_documents;
-    SearchEngine searchEngine;
 
-    bool documentsLoaded = false;
+    SearchEngine searchEngine;
+    RankingStrategy* rankingStrategy = nullptr;
+
+    bool m_documentsLoaded = false;
 };
 
 #endif

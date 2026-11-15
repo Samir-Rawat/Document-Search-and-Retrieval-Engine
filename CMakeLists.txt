@@ -35,6 +35,9 @@ add_executable(SearchEngine
 
         header/QueryParser.hpp
         source/QueryParser.cpp
+        
+        header/Trie.hpp
+        source/Trie.cpp
 )
 
 set_target_properties(SearchEngine PROPERTIES
